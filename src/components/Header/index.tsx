@@ -1,3 +1,4 @@
+import { SignInButton } from '../SignInButton';
 import styles from './styles.module.scss';
 
 export function Header(): JSX.Element {
@@ -9,6 +10,7 @@ export function Header(): JSX.Element {
           <a className={styles.active} href="##">Home</a>
           <a href="#33">Posts</a>
         </nav>
+        <SignInButton />
       </div>
     </header>
   );
