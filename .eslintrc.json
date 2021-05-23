@@ -22,6 +22,7 @@
     "react-hooks"
   ],
   "rules": {
+    "no-alert":"off",
     "react/jsx-props-no-spreading": "off",
     "camelcase": "off",
     "import/prefer-default-export": "off",
