@@ -1,4 +1,6 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { SignInButton } from '../SignInButton';
+import { ActiveLink } from '../ActiveLink';
 import styles from './styles.module.scss';
 
 export function Header(): JSX.Element {
@@ -7,8 +9,12 @@ export function Header(): JSX.Element {
       <div className={styles.headerContent}>
         <h2>gi.news</h2>
         <nav>
-          <a className={styles.active} href="##">Home</a>
-          <a href="#33">Posts</a>
+          <ActiveLink activeClassName={styles.active} href="/">
+            <a>Home</a>
+          </ActiveLink>
+          <ActiveLink activeClassName={styles.active} href="/posts">
+            <a>Posts</a>
+          </ActiveLink>
         </nav>
         <SignInButton />
       </div>
