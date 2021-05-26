@@ -1,10 +1,23 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Prismic from '@prismicio/client';
+import { RichText } from 'prismic-dom';
 import { getPrismicClient } from '../../services/prismic';
 import styles from './styles.module.scss';
 
-export default function Posts(): JSX.Element {
+type Post = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  updatedAt: string;
+};
+
+interface PostsProps {
+  posts: Post[];
+}
+
+export default function Posts({ posts }: PostsProps): JSX.Element {
   return (
     <>
       <Head>
@@ -13,65 +26,15 @@ export default function Posts(): JSX.Element {
 
       <main className={styles.container}>
         <div className={styles.posts}>
-          <a href="##">
-            <time>26 de maio de 2021</time>
-            <strong>Dia do Trabalho: Emprego e Renda na Vida Financeira</strong>
-            <p>
-              No mês em que comemoramos o Dia do Trabalho, vamos conversar sobre a
-              produção de renda!
-
-              Em maio, comemoramos o Dia do Trabalho. A data tem muitos significados
-              e, por isso, proponho uma reflexão sobre o tema.
-            </p>
-          </a>
-
-          <a href="##">
-            <time>26 de maio de 2021</time>
-            <strong>Dia do Trabalho: Emprego e Renda na Vida Financeira</strong>
-            <p>
-              No mês em que comemoramos o Dia do Trabalho, vamos conversar sobre a
-              produção de renda!
-
-              Em maio, comemoramos o Dia do Trabalho. A data tem muitos significados
-              e, por isso, proponho uma reflexão sobre o tema.
-            </p>
-          </a>
-
-          <a href="##">
-            <time>26 de maio de 2021</time>
-            <strong>Dia do Trabalho: Emprego e Renda na Vida Financeira</strong>
-            <p>
-              No mês em que comemoramos o Dia do Trabalho, vamos conversar sobre a
-              produção de renda!
-
-              Em maio, comemoramos o Dia do Trabalho. A data tem muitos significados
-              e, por isso, proponho uma reflexão sobre o tema.
-            </p>
-          </a>
-
-          <a href="##">
-            <time>26 de maio de 2021</time>
-            <strong>Dia do Trabalho: Emprego e Renda na Vida Financeira</strong>
-            <p>
-              No mês em que comemoramos o Dia do Trabalho, vamos conversar sobre a
-              produção de renda!
-
-              Em maio, comemoramos o Dia do Trabalho. A data tem muitos significados
-              e, por isso, proponho uma reflexão sobre o tema.
-            </p>
-          </a>
-
-          <a href="##">
-            <time>26 de maio de 2021</time>
-            <strong>Dia do Trabalho: Emprego e Renda na Vida Financeira</strong>
-            <p>
-              No mês em que comemoramos o Dia do Trabalho, vamos conversar sobre a
-              produção de renda!
-
-              Em maio, comemoramos o Dia do Trabalho. A data tem muitos significados
-              e, por isso, proponho uma reflexão sobre o tema.
-            </p>
-          </a>
+          {
+            posts.map((post) => (
+              <a key={post.slug} href="##">
+                <time>{post.updatedAt}</time>
+                <strong>{post.title}</strong>
+                <p>{post.excerpt}</p>
+              </a>
+            ))
+          }
         </div>
       </main>
     </>
@@ -89,9 +52,20 @@ export const getStaticProps: GetStaticProps = async () => {
     },
   );
 
-  console.log(response);
+  const posts = response.results.map((post) => ({
+    slug: post.uid,
+    title: RichText.asText(post.data.title),
+    excerpt: post.data.content.find((content) => content.type === 'paragraph')?.text ?? '',
+    updatedAt: new Date(post.last_publication_date).toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    }),
+  }));
 
   return {
-    props: [],
+    props: {
+      posts,
+    },
   };
 };
