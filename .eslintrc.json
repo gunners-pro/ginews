@@ -22,6 +22,7 @@
     "react-hooks"
   ],
   "rules": {
+    "react/no-danger": "off",
     "no-alert":"off",
     "react/jsx-props-no-spreading": "off",
     "camelcase": "off",
